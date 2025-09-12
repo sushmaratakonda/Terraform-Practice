@@ -1,0 +1,30 @@
+name: Terraform Pipeline
+
+on:
+  workflow_dispatch:   # Manual trigger
+  push:
+    branches:
+      - main           # Trigger on push to main branch
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.5   # use your required version
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
