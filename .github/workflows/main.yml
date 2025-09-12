@@ -1,10 +1,9 @@
-name: Terraform Pipeline
+name: Terraform CI/CD
 
 on:
-  workflow_dispatch:   # Manual trigger
   push:
     branches:
-      - main           # Trigger on push to main branch
+      - main
 
 jobs:
   terraform:
@@ -12,19 +11,22 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.9.5   # use your required version
+          terraform_version: 1.5.7  # or your version
 
       - name: Terraform Init
+        working-directory: ./terraform   # 👈 change to your folder path
         run: terraform init
 
       - name: Terraform Plan
+        working-directory: ./terraform   # 👈 same folder
         run: terraform plan
 
       - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        working-directory: ./terraform
         run: terraform apply -auto-approve
-        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
