@@ -19,14 +19,14 @@ jobs:
           terraform_version: 1.5.7  # or your version
 
       - name: Terraform Init
-        working-directory: ./terraform   # 👈 change to your folder path
+        working-directory: ./terraform_CICD   # 👈 change to your folder path
         run: terraform init
 
       - name: Terraform Plan
-        working-directory: ./terraform   # 👈 same folder
+        working-directory: ./terraform_CICD   # 👈 same folder
         run: terraform plan
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        working-directory: ./terraform
+        working-directory: ./terraform_CICD
         run: terraform apply -auto-approve
